@@ -22,7 +22,8 @@ test("it shows two inputs and  a button", () => {
     render(<UserForm onUserAdd={mock}/>);
 
     //Manipulate the component
-    const [nameInput, emailInput] = screen.getAllByRole('textbox');
+    const nameInput = screen.getByRole('textbox', {name: /name/i});                 // i make expression not to worry about lower or upper case
+    const emailInput = screen.getByRole('textbox', {name: /email/i});
 
     //Simulate typing in name
     user.click(nameInput);
