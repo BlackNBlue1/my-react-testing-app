@@ -43,3 +43,22 @@ test("it shows two inputs and  a button", () => {
     expect(mock).toHaveBeenCalled();
     expect(mock).toHaveBeenCalledWith({name:'John Doe', email:'jhon@doe.com'});
  });
+
+ //This test fails because when user added the input fields are not cleared
+ test('empties the two inputs when form is submitted', () => {
+
+    render(<UserForm onUserAdd={() =>{}}/>);
+
+    const nameInput = screen.getByRole('textbox', {name: /name/i});
+    const emailInput = screen.getByRole('textbox', {name: /email/i});
+    const button = screen.getByRole('button');
+
+    user.click(nameInput);
+    user.keyboard('John Doe');
+    user.click(emailInput);
+    user.keyboard('john@doe.com');
+    user.click(button);
+
+    expect(nameInput).toHaveValue('');
+    expect(emailInput).toHaveValue('');
+ });
