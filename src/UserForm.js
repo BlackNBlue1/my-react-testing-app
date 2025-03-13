@@ -8,6 +8,10 @@ function UserForm({ onUserAdd }) {
     event.preventDefault();
 
     onUserAdd({ name, email });
+
+    //Implement feature to pass the last test
+    setName('');
+    setEmail('');
   };
 
   return (
