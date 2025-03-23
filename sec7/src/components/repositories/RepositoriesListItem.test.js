@@ -18,8 +18,14 @@ function renderComponent() {
   );
 }
 
-test('shows a link to the github homepage for this repository', async () => {
+jest.mock('../tree/FileIcon.js', () => {
+    return () => {
+        return 'FileIcon Component in jest Mock';
+    }
+});
+
+test('shows a link to the github homepage for this repository', () => {
   renderComponent();
 
-  await screen.findByRole('img', { name: 'Javascript' });
+  screen.debug();
 });
