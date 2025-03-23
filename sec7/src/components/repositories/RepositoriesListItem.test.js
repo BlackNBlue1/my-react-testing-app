@@ -21,19 +21,5 @@ function renderComponent() {
 test('shows a link to the github homepage for this repository', async () => {
   renderComponent();
 
-// //This code is to find whether new elements get rendered in time window
-  screen.debug();
-  await pause();
-  screen.debug();
+  await screen.findByRole('img', { name: 'Javascript' });
 });
-
-
-
-
-const pause = () => {
-    return new Promise( resolve => {
-        setTimeout( () => {
-            resolve();
-        }, 100);
-    })
-}
