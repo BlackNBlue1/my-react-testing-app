@@ -1,4 +1,4 @@
-import { render, screen, act } from '@testing-library/react';
+import { render, screen} from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import RepositoriesListItem from './RepositoriesListItem';
 
@@ -21,15 +21,5 @@ function renderComponent() {
 test('shows a link to the github homepage for this repository', async() => {
   renderComponent();
 
-  await act(async () => {
-    await(pause());
-  });
+  await screen.findByRole('img', {name: 'Javascript'});
 });
-
-const pause = () =>{
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve();
-    }, 1000);
-  })
-}
