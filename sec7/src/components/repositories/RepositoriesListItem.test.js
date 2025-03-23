@@ -23,3 +23,12 @@ test('shows a link to the github homepage for this repository', async() => {
 
   await screen.findByRole('img', {name: 'Javascript'});
 });
+
+test('show a fileicon with the appropriate icon', async()  => {
+
+  renderComponent();
+
+  const icon = await screen.findByRole('img', {name: 'Javascript'});
+
+  expect(icon).toHaveClass('js-icon');
+})
