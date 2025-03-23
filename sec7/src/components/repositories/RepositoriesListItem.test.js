@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import RepositoriesListItem from './RepositoriesListItem';
 
@@ -18,14 +18,18 @@ function renderComponent() {
   );
 }
 
-jest.mock('../tree/FileIcon.js', () => {
-    return () => {
-        return 'FileIcon Component in jest Mock';
-    }
-});
-
-test('shows a link to the github homepage for this repository', () => {
+test('shows a link to the github homepage for this repository', async() => {
   renderComponent();
 
-  screen.debug();
+  await act(async () => {
+    await(pause());
+  });
 });
+
+const pause = () =>{
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve();
+    }, 1000);
+  })
+}
