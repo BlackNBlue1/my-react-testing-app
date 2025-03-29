@@ -19,3 +19,10 @@ const Handler = [
         )
     })
 ]
+
+const server = setupServer(...Handler);
+
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
+
