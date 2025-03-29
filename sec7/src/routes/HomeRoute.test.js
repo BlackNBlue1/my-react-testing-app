@@ -26,3 +26,12 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
+test('return 2 links for each language', async () => {
+    render(
+        <MemoryRouter>
+            <HomeRoute />
+        </MemoryRouter>
+    );
+
+
+});
