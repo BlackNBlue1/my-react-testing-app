@@ -1,51 +1,56 @@
-import {render, screen} from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import { setupServer } from 'msw/node';
+import { rest } from 'msw';
+import { MemoryRouter } from 'react-router-dom';
 import HomeRoute from './HomeRoute';
-import {MemoryRouter} from 'react-router-dom';
-import {rest} from 'msw';
-import {setupServer} from 'msw/node';
+import { createServer } from '../test/server';
 
-const Handler = [
-    rest.get('api/repositories', (req, res,ctx) => {
-        const query = req.url.searchParams.get('q').split('language:')[1];  //Taking the language from the query
-        console.log(query);
+createServer([
+  {
+    path: '/api/repositories',
+    res: (req) => {
+      const language = req.url.searchParams.get('q').split('language:')[1];
+      return {
+        items: [
+          { id: 1, full_name: `${language}_one` },
+          { id: 2, full_name: `${language}_two` },
+        ],
+      };
+    },
+  },
+]);
 
-        return res(
-            ctx.json({
-                items: [
-                    {id:1, full_name:`${query}_first`},
-                    {id:2, full_name:`${query}_second`},
-                ],
-            })
-        );
-    })
-]
+test('renders two links for each language', async () => {
+  render(
+    <MemoryRouter>
+      <HomeRoute />
+    </MemoryRouter>
+  );
 
-const server = setupServer(...Handler);
+  // Loop over each language
+  const languages = [
+    'javascript',
+    'typescript',
+    'rust',
+    'go',
+    'python',
+    'java',
+  ];
+  for (let language of languages) {
+    // For each language, make sure we see two links
+    const links = await screen.findAllByRole('link', {
+      name: new RegExp(`${language}_`),
+    });
 
-beforeAll(() => {server.listen()});
-afterEach(() => {server.resetHandlers()});
-afterAll(() => {server.close()});
-
-test('return 2 links for each language', async () => {
-    render(
-        <MemoryRouter>
-            <HomeRoute />
-        </MemoryRouter>
-    );
-
-    // screen.debug();
-
-    //Loop over all langs
-    const langs = ['javascript', 'typescript', 'rust', 'go', 'python', 'java'];
-    for (const lang of langs) {
-        //Make sure every language return 2 links
-        const links = await screen.findAllByRole('link', {name: new RegExp(`${lang}_`),});
-
-        //Make assertions
-        expect(links).toHaveLength(2);
-        expect(links[0]).toHaveTextContent(`${lang}_first`);
-        expect(links[1]).toHaveTextContent(`${lang}_second`);
-        expect(links[0]).toHaveAttribute('href', `/repositories/${lang}_first`);
-        expect(links[1]).toHaveAttribute('href', `/repositories/${lang}_second`);
-    }
+    expect(links).toHaveLength(2);
+    expect(links[0]).toHaveTextContent(`${language}_one`);
+    expect(links[1]).toHaveTextContent(`${language}_two`);
+    expect(links[0]).toHaveAttribute('href', `/repositories/${language}_one`);
+    expect(links[1]).toHaveAttribute('href', `/repositories/${language}_two`);
+  }
 });
+
+const pause = () =>
+  new Promise((resolve) => {
+    setTimeout(resolve, 100);
+  });
